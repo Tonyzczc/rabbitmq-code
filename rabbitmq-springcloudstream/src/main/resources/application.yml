@@ -1,0 +1,44 @@
+# 服务配置
+server:
+  port: 8888
+  context-path: /rabbitmq
+# spring应用配置
+spring:
+  application:
+    name: rabbitmq-cloud-stream
+  # SpringCloud 服务配置
+  cloud:
+    stream:
+      binders:
+        output_channel:
+          destination: exchange-3
+          group: queue-3
+          binder: rabbit_cluster
+        input_channel:
+          destination: exchange-3
+          group: queue-3
+          binder: rabbit_cluster
+          consumer:
+            concurrency: 1
+      bindings:
+        rabbit_cluster:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                addresses: 192.168.11.76:5672
+                username: guest
+                password: guest
+                virtual-host: /
+        input_channel:
+          consumer:
+            requeue-rejected: false
+            acknowledge-mode: MANUAL
+            recovery-interval: 3000
+            durable-subscription: true
+            max-concurrency: 5
+
+
+
+
+
